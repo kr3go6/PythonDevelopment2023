@@ -2,9 +2,10 @@ from random import choice
 import sys
 from os.path import exists
 from urllib.request import urlopen
-from cowsay import get_random_cow, cowsay
+from cowsay import get_random_cow, cowsay, read_dot_cow
 
 MIN_ARGC = 2
+MYCOW_FILENAME = "./my_cow.cow"
 
 
 def bullscows(guess: str, secret: str) -> (int, int):
@@ -27,10 +28,15 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
+    try:
+        my_cow = read_dot_cow(open(MYCOW_FILENAME))
+    except Exception:
+        raise ValueError("Произошла ошибка (не найден cow-файл)")
+
     if valid is None:
-        return input(cowsay(prompt, cow=get_random_cow()))
+        return input(cowsay(prompt, cowfile=my_cow))
     else:
-        while (guess := input(cowsay(prompt, cow=get_random_cow()) + "\n")) not in valid:
+        while (guess := input(cowsay(prompt, cowfile=my_cow) + "\n")) not in valid:
             print("Ввод недопустим (неизвестное слово)")
 
         return guess
