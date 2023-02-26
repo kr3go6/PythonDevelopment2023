@@ -2,6 +2,7 @@ from random import choice
 import sys
 from os.path import exists
 from urllib.request import urlopen
+from cowsay import get_random_cow, cowsay
 
 MIN_ARGC = 2
 
@@ -27,16 +28,16 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
 
 def ask(prompt: str, valid: list[str] = None) -> str:
     if valid is None:
-        return input(prompt)
+        return input(cowsay(prompt, cow=get_random_cow()))
     else:
-        while (guess := input(prompt)) not in valid:
+        while (guess := input(cowsay(prompt, cow=get_random_cow()) + "\n")) not in valid:
             print("Ввод недопустим (неизвестное слово)")
 
         return guess
 
 
 def inform(format_string: str, bulls: int, cows: int) -> None:
-    print(format_string.format(bulls, cows))
+    print(cowsay(format_string.format(bulls, cows), cow=get_random_cow()))
 
 
 def main(length: int = 5) -> None:
